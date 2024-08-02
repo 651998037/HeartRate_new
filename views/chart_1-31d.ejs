@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Heart Rate and SpO2 Graphs</title>
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://bootswatch.com/5/litera/bootstrap.css">
+    <style>
+
+        
+        body {
+            margin-top: 60px; /* Increase margin to accommodate the fixed navbar */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            background-color: #4CAF50; /* Updated background color for a more modern look */
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-nav {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+        .navbar-nav li {
+            margin: 0 15px; /* Increased margin for better spacing */
+        }
+        .navbar-nav a {
+            color: white;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .navbar-nav a:hover {
+            background-color: #45a049; /* Slightly darker green on hover */
+            transform: scale(1.05); /* Add scale effect on hover */
+        }
+        .container {
+            margin-top: 50px;
+            width: 80%;
+        }
+        .chart-container {
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+      </style>
+    </head>
+    <body>
+    
+      <nav class="navbar navbar-expand-lg navbar-light">
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link" href="/iot">หน้าหลัก</a></li>
+        </ul>
+      </nav>
+      
+<div class="container">
+    <div class="chart-container">
+        <h3 class="text-center">Daily Heart Rate</h3>
+        <canvas id="chartDailyHeartRate"></canvas>
+    </div>
+    <div class="chart-container">
+        <h3 class="text-center">Daily SpO2</h3>
+        <canvas id="chartDailySpo2"></canvas>
+    </div>
+    <div class="chart-container">
+        <h3 class="text-center">Weekly Heart Rate</h3>
+        <canvas id="chartWeeklyHeartRate"></canvas>
+    </div>
+    <div class="chart-container">
+        <h3 class="text-center">Weekly SpO2</h3>
+        <canvas id="chartWeeklySpo2"></canvas>
+    </div>
+    <div class="chart-container">
+        <h3 class="text-center">Monthly Heart Rate</h3>
+        <canvas id="chartMonthlyHeartRate"></canvas>
+    </div>
+    <div class="chart-container">
+        <h3 class="text-center">Monthly SpO2</h3>
+        <canvas id="chartMonthlySpo2"></canvas>
+    </div>
+</div>
+<script>
+   const data = <%- JSON.stringify(data) %>;
+console.log(data); // Log the data for debugging
+
+function createChart(ctx, label, data, borderColor, backgroundColor) {
+    return new Chart(ctx, {
+        type: 'line', //bar
+        data: {
+            labels: data.map((_, index) => index + 1), // Use indices as labels
+            datasets: [{
+                label: label,
+                data: data,
+                borderColor: borderColor,
+                backgroundColor: backgroundColor,
+                fill: true,
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: label
+                }
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Time'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: label.includes('Heart Rate') ? 'Heart Rate (bpm)' : 'SpO2 (%)'
+                    }
+                }
+            }
+        }
+    });
+}
+
+const ctxDailyHeartRate = document.getElementById('chartDailyHeartRate').getContext('2d');
+const ctxDailySpo2 = document.getElementById('chartDailySpo2').getContext('2d');
+const ctxWeeklyHeartRate = document.getElementById('chartWeeklyHeartRate').getContext('2d');
+const ctxWeeklySpo2 = document.getElementById('chartWeeklySpo2').getContext('2d');
+const ctxMonthlyHeartRate = document.getElementById('chartMonthlyHeartRate').getContext('2d');
+const ctxMonthlySpo2 = document.getElementById('chartMonthlySpo2').getContext('2d');
+
+createChart(ctxDailyHeartRate, 'Daily Heart Rate Over Time', data.daily.heartRate, 'rgba(255, 99, 132, 1)', 'rgba(255, 99, 132, 0.2)');
+createChart(ctxDailySpo2, 'Daily SpO2 Over Time', data.daily.spo2, 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 0.2)');
+createChart(ctxWeeklyHeartRate, 'Weekly Heart Rate Over Time', data.weekly.heartRate, 'rgba(255, 159, 64, 1)', 'rgba(255, 159, 64, 0.2)');
+createChart(ctxWeeklySpo2, 'Weekly SpO2 Over Time', data.weekly.spo2, 'rgba(75, 192, 192, 1)', 'rgba(75, 192, 192, 0.2)');
+createChart(ctxMonthlyHeartRate, 'Monthly Heart Rate Over Time', data.monthly.heartRate, 'rgba(153, 102, 255, 1)', 'rgba(153, 102, 255, 0.2)');
+createChart(ctxMonthlySpo2, 'Monthly SpO2 Over Time', data.monthly.spo2, 'rgba(255, 99, 132, 1)', 'rgba(255, 99, 132, 0.2)');
+</script>
+</body>
+</html>

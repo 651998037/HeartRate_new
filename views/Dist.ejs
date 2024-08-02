@@ -1,0 +1,160 @@
+
+<%- include("_header"); -%>
+
+<style>
+    body {
+        background-image: url('https://cdn.discordapp.com/attachments/1074338298635505765/1267753956931534929/2.png?ex=66a9ef61&is=66a89de1&hm=14e858ce202e6c038907b7e56061e54e7a35385510fa10b8dfd53c1d4552c3d4&');
+        background-position: center; /* ตำแหน่งภาพตรงกลาง */
+        background-size: cover; /* ปรับขนาดภาพให้ครอบคลุมพื้นที่ */
+        background-repeat: no-repeat; /* ไม่ให้ภาพซ้ำซ้อน */
+    }
+    .centered-link {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 10px;
+        
+    }
+
+    .btn-primary {
+        width: 200px;
+        height: 80px;
+        font-size: 20px;
+        margin: 0 1cm;
+    }
+
+    .parameter-frame {
+        display: inline-block;
+        margin: 20px;
+        border: 1px solid #ccc;
+        border-radius: 15px;
+        padding: 15px;
+        background-color: #f8f8f8;
+        box-shadow: 0px 2px 8px 5px rgba(0, 0, 0, 0.1);
+        width: 400px;
+        height: 200px;
+    }
+
+    #clock {
+        margin-top: 20px;
+        font-size: 24px;
+        margin-left: auto;
+    }
+
+    .IR_1 {
+        transform: translate(-4px, -53px);
+    }
+
+    .IR_BPM_Avg {
+        text-align: center;
+    }
+
+    .p {
+        display: inline-block;
+        margin: auto;
+        position: absolute;
+        top: calc(50% + 26cm);
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border: 1px solid #ccc;
+        border-radius: 15px;
+        padding: 15px;
+        background-color: #f8f8f8;
+        box-shadow: 0px 2px 8px 5px rgba(0, 0, 0, 0.1);
+        width: 15cm;
+        height: 10cm;
+        text-align: center;
+    }
+
+    .p h1, .p p, .p ul {
+        margin: 0;
+    }
+
+    .p {
+        background-image: url('https://cdn.discordapp.com/attachments/1093803444130811906/1217750388875333632/60-100_100_150_.png?ex=6605296d&is=65f2b46d&hm=d698d42a41f3a9d79eefe4eeaa13da4822bee17cb6009c3fa068af8e1114f8f4&');
+        background-size: cover;
+        background-position: center;
+    }
+
+    .background-container {
+        background-image: url('https://cdn.discordapp.com/attachments/1093803444130811906/1217750388875333632/60-100_100_150_.png?ex=6605296d&is=65f2b46d&hm=d698d42a41f3a9d79eefe4eeaa13da4822bee17cb6009c3fa068af8e1114f8f4&');
+        background-size: cover;
+        background-position: center;
+        position: relative;
+    }
+
+    
+</style>
+
+<div class="container mt-5">
+    <div class="container text-center">
+        <h1 style="color: #000;">ค่าอุปกรณ์ปัจจุบัน <i class="bi bi-heart-pulse"></i></h1>
+    </div>
+
+    <div id="clock" class="container text-center"></div>
+
+    <div class="IR_BPM_Avg">
+        <div class="IR_1">
+            <div class="parameter-frame" style="margin-bottom: -20px;">
+                <h4 style="color: #000;">HeartRate (เช็คการเต้นของหัวใจ)</h4>
+                <p style="font-size: 40px; text-align: center; margin-top: 20px; color: #000;"><%= data.HeartRatevalue %></p>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <div class="parameter-frame">
+                <h4 style="color: #000;">spo2 (ค่าออกซิเจน)</h4>
+                <% if (data.spo2value < 90) { %>
+                    <p style="font-size: 40px; text-align: center; margin-top: 20px; color: red;">
+                        <%= data.spo2value %>
+                    </p>
+                    <p>ระดับออกซิเจนในเลือดต่ำ</p>
+                <% } else if (data.spo2value > 100) { %>
+                    <p style="font-size: 40px; text-align: center; margin-top: 20px; color: red;">
+                        <%= data.spo2value %>
+                    </p>
+                    <p>ระดับออกซิเจนในเลือดสูงเกินไป</p>
+                <% } else { %>
+                    <p style="font-size: 40px; text-align: center; margin-top: 20px; color: black;">
+                        <%= data.spo2value %>
+                    </p>
+                <% } %>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+<div class="centered-link">
+    <a style="box-shadow: 2px 2px 8px 4px rgba(82, 124, 19, 0.16);" href="https://fb651998037.grafana.net/public-dashboards/eca5378c6c6d45f6b430c9172de62237" class="btn btn-primary">ดูค่า grafana</a>
+    <a  style="box-shadow: 2px 2px 8px 4px rgba(82, 124, 19, 0.16);" href="/graph" class="btn btn-primary">ดูข้อมูลตาราง</a>
+    <a  style="box-shadow: 2px 2px 8px 4px rgba(82, 124, 19, 0.16);" href="/influx" class="btn btn-primary">ดูข้อมูลแท่ง</a>
+    <a  style="box-shadow: 2px 2px 8px 4px rgba(82, 124, 19, 0.16);" href="/influx_1d_31" class="btn btn-primary">ดูกราฟเส้นภาพรวม</a>
+</div>
+
+
+<!-- <div class="p"></div> -->
+
+<%- include("_footer"); -%>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+<script>
+    function updateClock() {
+        var now = new Date();
+        var hours = now.getHours();
+        var minutes = now.getMinutes();
+        var seconds = now.getSeconds();
+
+        hours = hours < 10 ? '0' + hours : hours;
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        seconds = seconds < 10 ? '0' + seconds : seconds;
+
+        document.getElementById('clock').innerHTML = hours + ':' + minutes + ':' + seconds;
+
+        setTimeout(updateClock, 1000);
+    }
+
+    updateClock();
+</script>
+

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chart</title>
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://bootswatch.com/5/litera/bootstrap.css">
+  <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+        margin-top: 60px; /* Increase margin to accommodate the fixed navbar */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+    }
+    .navbar {
+        background-color: #4CAF50; /* Updated background color for a more modern look */
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .navbar-nav {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+    }
+    .navbar-nav li {
+        margin: 0 15px; /* Increased margin for better spacing */
+    }
+    .navbar-nav a {
+        color: white;
+        text-align: center;
+        padding: 14px 20px;
+        text-decoration: none;
+        display: block;
+        transition: background-color 0.3s, transform 0.2s;
+    }
+    .navbar-nav a:hover {
+        background-color: #45a049; /* Slightly darker green on hover */
+        transform: scale(1.05); /* Add scale effect on hover */
+    }
+    .container {
+        margin-top: 50px;
+        width: 80%;
+    }
+    .chart-container {
+        margin: 20px 0;
+        padding: 20px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <ul class="navbar-nav">
+      <li class="nav-item"><a class="nav-link" href="/iot">หน้าหลัก</a></li>
+    </ul>
+  </nav>
+
+  <div class="container chart-container">
+    <canvas id="heartRateChart"></canvas>
+  </div>
+
+  <div class="container chart-container">
+    <canvas id="spo2Chart"></canvas>
+  </div>
+
+  <script>
+    const heartRateCtx = document.getElementById('heartRateChart').getContext('2d');
+    const spo2Ctx = document.getElementById('spo2Chart').getContext('2d');
+
+    // แปลงข้อมูลจาก EJS เป็นอาเรย์
+    const heartRateData = <%= JSON.stringify(heartRateData) %>;
+    const spo2Data = <%= JSON.stringify(spo2Data) %>;
+
+    new Chart(heartRateCtx, {
+      type: 'bar',
+      data: {
+        labels: Array.from({ length: heartRateData.length }, (_, i) => i),
+        datasets: [{
+          label: 'Heart Rate',
+          data: heartRateData,
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: 'Index'
+            }
+          },
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: 'Heart Rate'
+            }
+          }
+        }
+      }
+    });
+
+    new Chart(spo2Ctx, {
+      type: 'bar',
+      data: {
+        labels: Array.from({ length: spo2Data.length }, (_, i) => i),
+        datasets: [{
+          label: 'SpO2',
+          data: spo2Data,
+          backgroundColor: 'rgba(153, 102, 255, 0.2)',
+          borderColor: 'rgba(153, 102, 255, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: 'Index'
+            }
+          },
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: 'SpO2'
+            }
+          }
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>
